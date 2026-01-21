@@ -4,8 +4,8 @@ class KwhMeterModel {
   final String noSeriMeter;
   final String teganganMeter;
   final String arusMeter;
-  final double konstantaMeter;
-  final String tahunMeter;
+  final String konstantaMeter;
+  final double tahunMeter;
   final String classMeter;
   final String kubikelMccb;
 
@@ -28,10 +28,8 @@ class KwhMeterModel {
       noSeriMeter: json['no_seri_meter'] ?? '',
       teganganMeter: json['tegangan_meter'] ?? '',
       arusMeter: json['arus_meter'] ?? '',
-      konstantaMeter: json['konstanta_meter'] is double 
-          ? json['konstanta_meter'] 
-          : double.tryParse(json['konstanta_meter'].toString()) ?? 0.0,
-      tahunMeter: json['tahun_meter'] ?? '',
+      konstantaMeter: json['konstanta_meter'] ?? '',
+      tahunMeter: json['tahun_meter'] != null ? double.tryParse(json['tahun_meter'].toString()) ?? 0.0 : 0.0,
       classMeter: json['class_meter'] ?? '',
       kubikelMccb: json['kubikel_mccb'] ?? '',
     );

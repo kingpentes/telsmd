@@ -6,6 +6,7 @@ import '../../maintenance/models/protection_model.dart';
 import '../../dokumentasi/models/documentation_model.dart';
 import '../../hasil/models/result_model.dart';
 
+
 class InspectionModel {
   final CustomerModel customer;
   final KwhMeterModel kwhMeter;

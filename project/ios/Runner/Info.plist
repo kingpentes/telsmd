@@ -45,5 +45,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Kami membutuhkan akses galeri untuk mengupload foto dokumentasi inspeksi.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Kami membutuhkan akses kamera untuk mengambil foto dokumentasi inspeksi.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Kami membutuhkan akses mikrofon untuk video dokumentasi (jika diperlukan).</string>
 </dict>
 </plist>

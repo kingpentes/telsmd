@@ -1,21 +1,41 @@
 class CtInspectionModel {
   final String ptTerpasang;
   final String ctTerpasang;
-  final PhaseData arusCtPrimer;
-  final PhaseData arusCtSekunder;
-  final PhaseData ratioCt;
-  final PhaseData errorCt;
-  final PhaseData tegangan;
+  final double ctrPrimer;
+  final double ctsPrimer;
+  final double cttPrimer;
+  final double ctrSekunder;
+  final double ctsSekunder;
+  final double cttSekunder;
+  final double ctrRatio;
+  final double ctsRatio;
+  final double cttRatio;
+  final double ctrError;
+  final double ctsError;
+  final double cttError;
+  final double ctrTegangan;
+  final double ctsTegangan;
+  final double cttTegangan;
   final double cosphi;
 
   CtInspectionModel({
     required this.ptTerpasang,
     required this.ctTerpasang,
-    required this.arusCtPrimer,
-    required this.arusCtSekunder,
-    required this.ratioCt,
-    required this.errorCt,
-    required this.tegangan,
+    required this.ctrPrimer,
+    required this.ctsPrimer,
+    required this.cttPrimer,
+    required this.ctrSekunder,
+    required this.ctsSekunder,
+    required this.cttSekunder,
+    required this.ctrRatio,
+    required this.ctsRatio,
+    required this.cttRatio,
+    required this.ctrError,
+    required this.ctsError,
+    required this.cttError,
+    required this.ctrTegangan,
+    required this.ctsTegangan,
+    required this.cttTegangan,
     required this.cosphi,
   });
 
@@ -23,11 +43,21 @@ class CtInspectionModel {
     return CtInspectionModel(
       ptTerpasang: json['pt_terpasang'] ?? '',
       ctTerpasang: json['ct_terpasang'] ?? '',
-      arusCtPrimer: PhaseData.fromJson(json['arus_ct_primer'] ?? {}),
-      arusCtSekunder: PhaseData.fromJson(json['arus_ct_sekunder'] ?? {}),
-      ratioCt: PhaseData.fromJson(json['ratio_ct'] ?? {}),
-      errorCt: PhaseData.fromJson(json['error_ct'] ?? {}),
-      tegangan: PhaseData.fromJson(json['tegangan'] ?? {}),
+      ctrPrimer: double.tryParse(json['ctr_primer']?.toString() ?? '') ?? 0.0,
+      ctsPrimer: double.tryParse(json['cts_primer']?.toString() ?? '') ?? 0.0,
+      cttPrimer: double.tryParse(json['ctt_primer']?.toString() ?? '') ?? 0.0,
+      ctrSekunder: double.tryParse(json['ctr_sekunder']?.toString() ?? '') ?? 0.0,
+      ctsSekunder: double.tryParse(json['cts_sekunder']?.toString() ?? '') ?? 0.0,
+      cttSekunder: double.tryParse(json['ctt_sekunder']?.toString() ?? '') ?? 0.0,
+      ctrRatio: double.tryParse(json['ctr_ratio']?.toString() ?? '') ?? 0.0,
+      ctsRatio: double.tryParse(json['cts_ratio']?.toString() ?? '') ?? 0.0,
+      cttRatio: double.tryParse(json['ctt_ratio']?.toString() ?? '') ?? 0.0,
+      ctrError: double.tryParse(json['ctr_error']?.toString() ?? '') ?? 0.0,
+      ctsError: double.tryParse(json['cts_error']?.toString() ?? '') ?? 0.0,
+      cttError: double.tryParse(json['ctt_error']?.toString() ?? '') ?? 0.0,
+      ctrTegangan: double.tryParse(json['ctr_tegangan']?.toString() ?? '') ?? 0.0,
+      ctsTegangan: double.tryParse(json['cts_tegangan']?.toString() ?? '') ?? 0.0,
+      cttTegangan: double.tryParse(json['ctt_tegangan']?.toString() ?? '') ?? 0.0,
       cosphi: double.tryParse(json['cosphi']?.toString() ?? '') ?? 0.0,
     );
   }
@@ -36,40 +66,23 @@ class CtInspectionModel {
     return {
       'pt_terpasang': ptTerpasang,
       'ct_terpasang': ctTerpasang,
-      'arus_ct_primer': arusCtPrimer.toJson(),
-      'arus_ct_sekunder': arusCtSekunder.toJson(),
-      'ratio_ct': ratioCt.toJson(),
-      'error_ct': errorCt.toJson(),
-      'tegangan': tegangan.toJson(),
+      'ctr_primer': ctrPrimer,
+      'cts_primer': ctsPrimer,
+      'ctt_primer': cttPrimer,
+      'ctr_sekunder': ctrSekunder,
+      'cts_sekunder': ctsSekunder,
+      'ctt_sekunder': cttSekunder,
+      'ctr_ratio': ctrRatio,
+      'cts_ratio': ctsRatio,
+      'ctt_ratio': cttRatio,
+      'ctr_error': ctrError,
+      'cts_error': ctsError,
+      'ctt_error': cttError,
+      'ctr_tegangan': ctrTegangan,
+      'cts_tegangan': ctsTegangan,
+      'ctt_tegangan': cttTegangan,
       'cosphi': cosphi,
     };
   }
 }
 
-class PhaseData {
-  final double r;
-  final double s;
-  final double t;
-
-  PhaseData({
-    required this.r,
-    required this.s,
-    required this.t,
-  });
-
-  factory PhaseData.fromJson(Map<String, dynamic> json) {
-    return PhaseData(
-      r: double.tryParse(json['r']?.toString() ?? '') ?? 0.0,
-      s: double.tryParse(json['s']?.toString() ?? '') ?? 0.0,
-      t: double.tryParse(json['t']?.toString() ?? '') ?? 0.0,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'r': r,
-      's': s,
-      't': t,
-    };
-  }
-}
