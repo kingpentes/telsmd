@@ -25,13 +25,13 @@ class KwhMeterModel {
     return KwhMeterModel(
       merkMeter: json['merk_meter'] ?? '',
       typeMeter: json['type_meter'] ?? '',
-      noSeriMeter: json['no_seri_meter'] ?? '',
-      teganganMeter: json['tegangan_meter'] ?? '',
-      arusMeter: json['arus_meter'] ?? '',
-      konstantaMeter: json['konstanta_meter'] ?? '',
-      tahunMeter: json['tahun_meter'] != null ? double.tryParse(json['tahun_meter'].toString()) ?? 0.0 : 0.0,
-      classMeter: json['class_meter'] ?? '',
-      kubikelMccb: json['kubikel_mccb'] ?? '',
+      noSeriMeter: json['nomormeter'] ?? '',
+      teganganMeter: json['teganganmeter'] ?? '',
+      arusMeter: json['arusmeter'] ?? '',
+      konstantaMeter: json['konsmeter'] ?? '',
+      tahunMeter: json['tahunmeter'] != null ? double.tryParse(json['tahunmeter'].toString()) ?? 0.0 : 0.0,
+      classMeter: json['classmeter'] ?? '',
+      kubikelMccb: json['pemb_arus'] ?? '',
     );
   }
 
@@ -39,13 +39,13 @@ class KwhMeterModel {
     return {
       'merk_meter': merkMeter,
       'type_meter': typeMeter,
-      'no_seri_meter': noSeriMeter,
-      'tegangan_meter': teganganMeter,
-      'arus_meter': arusMeter,
-      'konstanta_meter': konstantaMeter,
-      'tahun_meter': tahunMeter,
-      'class_meter': classMeter,
-      'kubikel_mccb': kubikelMccb,
+      'nomormeter': noSeriMeter,
+      'teganganmeter': teganganMeter,
+      'arusmeter': arusMeter,
+      'konsmeter': konstantaMeter,
+      'tahunmeter': tahunMeter,
+      'classmeter': classMeter,
+      'pemb_arus': kubikelMccb,
     };
   }
 }

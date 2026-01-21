@@ -13,19 +13,19 @@ class ProtectionModel {
 
   factory ProtectionModel.fromJson(Map<String, dynamic> json) {
     return ProtectionModel(
-      kondisiProteksi: json['kondisi_proteksi'] ?? '',
-      arusSettingOcr: json['arus_setting_ocr'] ?? '',
-      waktuSettingOcr: json['waktu_setting_ocr'] ?? '',
-      thermalSettingOcr: json['thermal_setting_ocr'] ?? '',
+      kondisiProteksi: json['kond_proteksi'] ?? '',
+      arusSettingOcr: json['arus_setting'] ?? '',
+      waktuSettingOcr: json['waktu_setting'] ?? '',
+      thermalSettingOcr: json['thermal_setting'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'kondisi_proteksi': kondisiProteksi,
-      'arus_setting_ocr': arusSettingOcr,
-      'waktu_setting_ocr': waktuSettingOcr,
-      'thermal_setting_ocr': thermalSettingOcr,
+      'kond_proteksi': kondisiProteksi,
+      'arus_setting': arusSettingOcr,
+      'waktu_setting': waktuSettingOcr,
+      'thermal_setting': thermalSettingOcr,
     };
   }
 }

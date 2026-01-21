@@ -17,23 +17,23 @@ class DocumentationModel {
 
   factory DocumentationModel.fromJson(Map<String, dynamic> json) {
     return DocumentationModel(
-      fotoKwh: json['foto_kwh'] ?? '',
-      fotoRelay: json['foto_relay'] ?? '',
-      fotoKubikel: json['foto_kubikel'] ?? '',
-      fotoHasil1: json['foto_hasil_1'] ?? '',
-      fotoHasil2: json['foto_hasil_2'] ?? '',
-      beritaAcara: json['berita_acara'] ?? '',
+      fotoKwh: json['doku1'] ?? '',
+      fotoRelay: json['doku2'] ?? '',
+      fotoKubikel: json['doku3'] ?? '',
+      fotoHasil1: json['doku4'] ?? '',
+      fotoHasil2: json['doku5'] ?? '',
+      beritaAcara: json['dokumen'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'foto_kwh': fotoKwh,
-      'foto_relay': fotoRelay,
-      'foto_kubikel': fotoKubikel,
-      'foto_hasil_1': fotoHasil1,
-      'foto_hasil_2': fotoHasil2,
-      'berita_acara': beritaAcara,
+      'doku1': fotoKwh,
+      'doku2': fotoRelay,
+      'doku3': fotoKubikel,
+      'doku4': fotoHasil1,
+      'doku5': fotoHasil2,
+      'dokumen': beritaAcara,
     };
   }
 }

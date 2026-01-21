@@ -15,7 +15,7 @@ class ResultModel {
     return ResultModel(
       keterangan: json['keterangan'] ?? '',
       kesimpulan: json['kesimpulan'] ?? '',
-      tindakLanjut: json['tindak_lanjut'] ?? '',
+      tindakLanjut: json['tindaklanjut'] ?? '',
       petugasPemeriksa: json['petugas_pemeriksa'] ?? '',
     );
   }
@@ -24,7 +24,7 @@ class ResultModel {
     return {
       'keterangan': keterangan,
       'kesimpulan': kesimpulan,
-      'tindak_lanjut': tindakLanjut,
+      'tindaklanjut': tindakLanjut,
       'petugas_pemeriksa': petugasPemeriksa,
     };
   }
