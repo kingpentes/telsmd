@@ -1,7 +1,19 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'features/auth/screens/login_screen.dart';
+import 'features/inspection/screens/ct_inspection_screen.dart';
+import 'features/users/screens/customer_screen.dart';
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+  }
+}
 
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
 }
 
@@ -15,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const LoginScreen(),
+      home: const CustomerScreen(),
     );
   }
 }

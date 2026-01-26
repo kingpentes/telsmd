@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import '../../inspection/providers/inspection_provider.dart';
+import '../models/documentation_model.dart';
 
 class DocumentationTab extends StatefulWidget {
   const DocumentationTab({super.key});
@@ -12,21 +15,33 @@ class DocumentationTab extends StatefulWidget {
 class _DocumentationTabState extends State<DocumentationTab> {
   final ImagePicker _picker = ImagePicker();
 
-  final Map<String, File?> _images = {
-    'fotoKwh': null,
-    'fotoRelay': null,
-    'fotoKubikel': null,
-    'fotoHasil1': null,
-    'fotoHasil2': null,
-    'beritaAcara': null,
-  };
+  @override
+  void initState() {
+    super.initState();
+    // No explicit initialization needed for images as we pull directly from provider in build or helper
+    // However, for local display consistency in _images map, we can sync.
+    // Actually, sticking to the _images pattern:
+  }
 
   Future<void> _pickImage(String key, ImageSource source) async {
     final XFile? pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
-      setState(() {
-        _images[key] = File(pickedFile.path);
-      });
+      // Update Provider
+      final provider = Provider.of<InspectionProvider>(context, listen: false);
+      final currentDoc = provider.documentation;
+      
+      String? path = pickedFile.path;
+      
+      provider.updateDocumentation(DocumentationModel(
+        fotoKwh: key == 'fotoKwh' ? path : currentDoc.fotoKwh,
+        fotoRelay: key == 'fotoRelay' ? path : currentDoc.fotoRelay,
+        fotoKubikel: key == 'fotoKubikel' ? path : currentDoc.fotoKubikel,
+        fotoHasil1: key == 'fotoHasil1' ? path : currentDoc.fotoHasil1,
+        fotoHasil2: key == 'fotoHasil2' ? path : currentDoc.fotoHasil2,
+        beritaAcara: key == 'beritaAcara' ? path : currentDoc.beritaAcara,
+      ));
+      
+      setState(() {}); // Trigger rebuild to show new image
     }
   }
 
@@ -65,7 +80,22 @@ class _DocumentationTabState extends State<DocumentationTab> {
   }
 
   Widget _buildImageInput(String label, String key) {
-    final imageFile = _images[key];
+    // Get image path from provider
+    final provider = Provider.of<InspectionProvider>(context);
+    final doc = provider.documentation;
+    String? path;
+    
+    switch (key) {
+      case 'fotoKwh': path = doc.fotoKwh; break;
+      case 'fotoRelay': path = doc.fotoRelay; break;
+      case 'fotoKubikel': path = doc.fotoKubikel; break;
+      case 'fotoHasil1': path = doc.fotoHasil1; break;
+      case 'fotoHasil2': path = doc.fotoHasil2; break;
+      case 'beritaAcara': path = doc.beritaAcara; break;
+    }
+    
+    final imageFile = (path != null && path.isNotEmpty) ? File(path) : null;
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
@@ -87,9 +117,16 @@ class _DocumentationTabState extends State<DocumentationTab> {
                       ),
                       IconButton(
                         onPressed: () {
-                          setState(() {
-                            _images[key] = null;
-                          });
+                          // Clear image in provider
+                          final currentDoc = provider.documentation;
+                           provider.updateDocumentation(DocumentationModel(
+                            fotoKwh: key == 'fotoKwh' ? '' : currentDoc.fotoKwh,
+                            fotoRelay: key == 'fotoRelay' ? '' : currentDoc.fotoRelay,
+                            fotoKubikel: key == 'fotoKubikel' ? '' : currentDoc.fotoKubikel,
+                            fotoHasil1: key == 'fotoHasil1' ? '' : currentDoc.fotoHasil1,
+                            fotoHasil2: key == 'fotoHasil2' ? '' : currentDoc.fotoHasil2,
+                            beritaAcara: key == 'beritaAcara' ? '' : currentDoc.beritaAcara,
+                          ));
                         },
                         icon: const Icon(Icons.remove_circle,
                             color: Colors.red),

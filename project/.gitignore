@@ -33,6 +33,11 @@ migrate_working_dir/
 .pub/
 /build/
 
+
+# API
+api/
+api.rar
+
 # Symbolication related
 app.*.symbols
 

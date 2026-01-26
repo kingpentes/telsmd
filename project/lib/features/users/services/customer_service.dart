@@ -1,56 +1,45 @@
+/// Service untuk mengambil data pelanggan dari API.
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../../core/constants/api_constants.dart';
 import '../models/customer_model.dart';
+import '../../auth/services/auth_Services.dart';
 
 class CustomerService {
-  // Get all customers
+  /// Mengambil daftar semua pelanggan dari server.
+  /// Mengembalikan list kosong jika terjadi error.
   Future<List<CustomerModel>> getCustomers() async {
     try {
-      final response = await http.get(Uri.parse(ApiConstants.cekpotUrl));
+      final token = await AuthServices().getToken();
+      if (token == null) throw Exception('Token tidak ditemukan');
 
-      if (response.statusCode == 200) {
-        final List<dynamic> jsonList = jsonDecode(response.body);
-        return jsonList.map((json) => CustomerModel.fromJson(json)).toList();
-      } else {
-        throw Exception('Failed to load customers: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Error fetching customers: $e');
-    }
-  }
-
-  // Get customer by ID
-  Future<CustomerModel> getCustomerById(String id) async {
-    try {
-      final response = await http.get(Uri.parse('${ApiConstants.cekpotUrl}/$id'));
-
-      if (response.statusCode == 200) {
-        return CustomerModel.fromJson(jsonDecode(response.body));
-      } else {
-        throw Exception('Failed to load customer: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Error fetching customer: $e');
-    }
-  }
-
-  // Input Info Pelanggan
-  Future<CustomerModel> inputInfoPelanggan(CustomerModel customer) async {
-    try {
-      final response = await http.post(
-        Uri.parse(ApiConstants.cekpotUrl),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(customer.toJson()),
+      final response = await http.get(
+        Uri.parse(ApiConstants.dilListUrl),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return CustomerModel.fromJson(jsonDecode(response.body));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        
+        List<dynamic> list;
+        // Menangani format response DataTables ({data: [...]}) atau array langsung
+        if (data is Map && data.containsKey('data') && data['data'] is List) {
+           list = data['data'];
+        } else if (data is List) {
+           list = data;
+        } else {
+           return [];
+        }
+
+        return list.map((e) => CustomerModel.fromJson(e)).toList();
       } else {
-        throw Exception('Failed to input customer info: ${response.statusCode}');
+        throw Exception('Gagal memuat data pelanggan: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Error inputting customer info: $e');
+      throw Exception('Error saat mengambil data pelanggan: $e');
     }
   }
 }

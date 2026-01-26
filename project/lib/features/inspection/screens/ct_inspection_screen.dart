@@ -1,34 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:project/features/users/widgets/customer_data_tab.dart';
 import 'package:project/features/stanMeter/widgets/meter_data_tab.dart';
 import 'package:project/features/CT/widgets/ct_data_tab.dart';
-import 'package:project/features/maintenance/widgets/maintenance_tab.dart';
+import 'package:project/features/protection/widgets/maintenance_tab.dart';
 import 'package:project/features/kwh/widgets/kwh_meter_data.dart';
 import 'package:project/features/dokumentasi/widgets/documentation_tab.dart';
-import 'package:project/features/hasil/widgets/hasil_tab.dart';
-
+import 'package:project/features/result/widgets/hasil_tab.dart';
 import 'package:project/features/auth/services/auth_Services.dart';
 import 'package:project/features/auth/screens/login_screen.dart';
+import '../providers/inspection_provider.dart';
+import 'backlog_screen.dart';
 
 class CtInspectionScreen extends StatelessWidget {
   const CtInspectionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 7, 
-      child: Scaffold(
-        appBar: AppBar(
+    return ChangeNotifierProvider(
+      create: (_) => InspectionProvider(),
+      child: DefaultTabController(
+        length: 7, 
+        child: Scaffold(
+          appBar: AppBar(
           title: const Text('Input Cekpot'),
           actions: [
+             IconButton(
+              icon: const Icon(Icons.history),
+              tooltip: 'Offline Backlog',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const BacklogScreen()),
+                );
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.logout),
               onPressed: () async {
-                // Tampilkan konfirmasi logout (opsional) atau langsung logout
-                
-                // Panggil service logout
-                // Karena method logout() di authServices mengembalikan Future<bool>, kita tunggu hasilnya
-                final success = await authServices().logout();
+                final success = await AuthServices().logout();
 
                 if (context.mounted) {
                    if (success) {
@@ -73,6 +83,7 @@ class CtInspectionScreen extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 }

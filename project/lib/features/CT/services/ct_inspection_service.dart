@@ -1,23 +1,5 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import '../../../core/constants/api_constants.dart';
-import '../models/ct_inspection_model.dart';
+/// [TIDAK DIGUNAKAN]
+/// Logika telah dipindahkan ke features/inspection/services/inspection_service.dart
+/// File ini dipertahankan untuk struktur folder jika diperlukan implementasi Repository di masa depan.
 
-class CtInspectionService {
-  Future<CtInspectionModel> inputCtInspection(CtInspectionModel ctInspection) async {
-    try {
-      final response = await http.post(
-        Uri.parse(ApiConstants.cekpotUrl),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(ctInspection.toJson()),
-      );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return CtInspectionModel.fromJson(jsonDecode(response.body));
-      } else {
-        throw Exception('Failed to input ct inspection: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Error inputting ct inspection: $e');
-    }
-  }
+class CtInspectionService {}
