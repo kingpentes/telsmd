@@ -9,7 +9,6 @@ import '../../dokumentasi/models/documentation_model.dart';
 import '../../result/models/result_model.dart';
 
 class InspectionProvider extends ChangeNotifier {
-  // Initialize with default empty values
   CustomerModel _customer = CustomerModel(
     idPel: BigInt.zero,
     unitUp: BigInt.zero,
@@ -88,7 +87,6 @@ class InspectionProvider extends ChangeNotifier {
     petugasPemeriksa: '',
   );
 
-  // Getters
   CustomerModel get customer => _customer;
   KwhMeterModel get kwhMeter => _kwhMeter;
   StanMeterModel get standMeter => _standMeter;
@@ -107,7 +105,6 @@ class InspectionProvider extends ChangeNotifier {
         result: _result,
       );
 
-  // Setters
   void updateCustomer(CustomerModel data) {
     _customer = data;
     notifyListeners();

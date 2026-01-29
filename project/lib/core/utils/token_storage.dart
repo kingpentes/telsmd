@@ -32,6 +32,12 @@ class TokenStorage {
     await prefs.remove(_usernameKey);
   }
 
+  // Ambil user ID
+  static Future<int?> getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_userIdKey);
+  }
+
   // Cek apakah sudah login
   static Future<bool> isLoggedIn() async {
     final token = await getToken();

@@ -1,0 +1,69 @@
+﻿Analyzing project...                                            
+
+   info - Dangling library doc comment - lib\features\CT\services\ct_inspection_service.dart:1:1 - dangling_library_doc_comments
+   info - The variable name 'p_r' isn't a lowerCamelCase identifier - lib\features\CT\widgets\ct_data_tab.dart:136:11 - non_constant_identifier_names
+   info - The variable name 'p_s' isn't a lowerCamelCase identifier - lib\features\CT\widgets\ct_data_tab.dart:137:11 - non_constant_identifier_names
+   info - The variable name 'p_t' isn't a lowerCamelCase identifier - lib\features\CT\widgets\ct_data_tab.dart:138:11 - non_constant_identifier_names
+   info - The variable name 's_r' isn't a lowerCamelCase identifier - lib\features\CT\widgets\ct_data_tab.dart:140:11 - non_constant_identifier_names
+   info - The variable name 's_s' isn't a lowerCamelCase identifier - lib\features\CT\widgets\ct_data_tab.dart:141:11 - non_constant_identifier_names
+   info - The variable name 's_t' isn't a lowerCamelCase identifier - lib\features\CT\widgets\ct_data_tab.dart:142:11 - non_constant_identifier_names
+   info - The variable name 'np_p' isn't a lowerCamelCase identifier - lib\features\CT\widgets\ct_data_tab.dart:151:19 - non_constant_identifier_names
+   info - The variable name 'np_s' isn't a lowerCamelCase identifier - lib\features\CT\widgets\ct_data_tab.dart:152:19 - non_constant_identifier_names
+   info - The file name 'auth_Services.dart' isn't a lower_case_with_underscores identifier - lib\features\auth\services\auth_Services.dart:1:1 - file_names
+   info - Don't invoke 'print' in production code - lib\features\auth\services\auth_Services.dart:19:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\auth\services\auth_Services.dart:20:7 - avoid_print
+   info - Dangling library doc comment - lib\features\dokumentasi\services\documentation_service.dart:1:1 - dangling_library_doc_comments
+   info - Don't use 'BuildContext's across async gaps - lib\features\dokumentasi\widgets\documentation_tab.dart:30:56 - use_build_context_synchronously
+   info - Dangling library doc comment - lib\features\inspection\services\inspection_service.dart:1:1 - dangling_library_doc_comments
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:25:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:38:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:54:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:71:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:73:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:82:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:86:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:93:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:106:13 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:110:16 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:114:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:118:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:134:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:138:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:155:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:159:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:169:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:170:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:181:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:182:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:204:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\features\inspection\services\inspection_service.dart:208:7 - avoid_print
+   info - Dangling library doc comment - lib\features\kwh\services\kwh_meter_service.dart:1:1 - dangling_library_doc_comments
+   info - Dangling library doc comment - lib\features\protection\services\protection_service.dart:1:1 - dangling_library_doc_comments
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\protection\widgets\maintenance_tab.dart:80:13 - deprecated_member_use
+   info - Dangling library doc comment - lib\features\result\services\result_service.dart:1:1 - dangling_library_doc_comments
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\result\widgets\hasil_tab.dart:77:13 - deprecated_member_use
+   info - Dangling library doc comment - lib\features\stanMeter\services\stan_meter_service.dart:1:1 - dangling_library_doc_comments
+   info - Dangling library doc comment - lib\features\users\services\customer_service.dart:1:1 - dangling_library_doc_comments
+warning - Unused import: '../../inspection/models/inspection_model.dart' - lib\features\users\widgets\customer_data_tab.dart:4:8 - unused_import
+
+flutter : 45 issues 
+found. (ran in 4.4s)
+At line:1 char:1
++ flutter analyze 
+2>&1 | Out-File 
+-FilePath 
+"analyze_output.txt" 
+-Encod ...
++ 
+~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo   
+           : 
+NotSpecified: (45 is 
+   sues found. (ran 
+in 4.4    s):String) 
+[], RemoteEx    
+ception
+    + FullyQualifiedE
+rrorId     : 
+NativeCommandError
+ 

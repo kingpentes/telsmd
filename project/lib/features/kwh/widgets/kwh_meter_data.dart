@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../inspection/providers/inspection_provider.dart';
-import '../models/kwh_meter_model.dart'; // Adjust path if necessary
+import '../models/kwh_meter_model.dart';
 
 class KwhMeterDataTab extends StatefulWidget {
   const KwhMeterDataTab({super.key});
@@ -86,7 +86,6 @@ class _KwhMeterDataTabState extends State<KwhMeterDataTab> {
             'Data KWH Meter',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          // field text untuk merk meter, type meter, no seri meter, tegangan meter, arus meter, konstanta meter, tahun meter, class meter, kubikel / mccb
           const SizedBox(height: 16),
           TextField(controller: _merkMeterController, decoration: const InputDecoration(labelText: 'Merk Meter', border: OutlineInputBorder())),
           const SizedBox(height: 16),

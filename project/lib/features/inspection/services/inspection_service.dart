@@ -19,10 +19,17 @@ class InspectionService {
   /// Jika gagal karena masalah jaringan atau server, data disimpan ke backlog lokal.
   Future<bool> submitInspection(InspectionModel data) async {
     try {
+      // Get userId from TokenStorage
+      final userId = await TokenStorage.getUserId();
+      if (userId == null) {
+        print('Error: userId not found - user may not be logged in');
+        return false;
+      }
+
       final response = await client.post(
         Uri.parse(ApiConstants.cekpotUrl),
         headers: {'Content-Type': 'application/json; charset=UTF-8'},
-        body: jsonEncode(data.toJson()),
+        body: jsonEncode(data.toJson(userId: userId)),
       ).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -31,30 +38,36 @@ class InspectionService {
         print('Gagal mengirim pemeriksaan: ${response.statusCode} - ${response.body}');
         // Jika error server (5xx), simpan ke backlog
         if (response.statusCode >= 500) {
-           await _saveToBacklog(data);
+           await _saveToBacklog(data, userId);
            return true; 
         }
         return false;
       }
     } on SocketException {
       // Tidak ada koneksi internet, simpan ke backlog
-      await _saveToBacklog(data);
+      final userId = await TokenStorage.getUserId();
+      if (userId != null) {
+        await _saveToBacklog(data, userId);
+      }
       return true;
     } catch (e) {
       print('Exception saat mengirim pemeriksaan: $e');
       // Simpan ke backlog kecuali error format data
       if (e is! FormatException) {
-         await _saveToBacklog(data);
-         return true;
+        final userId = await TokenStorage.getUserId();
+        if (userId != null) {
+          await _saveToBacklog(data, userId);
+        }
+        return true;
       }
       return false;
     }
   }
 
   /// Menyimpan data pemeriksaan ke database lokal (backlog) untuk dikirim nanti.
-  Future<void> _saveToBacklog(InspectionModel data) async {
+  Future<void> _saveToBacklog(InspectionModel data, int userId) async {
     try {
-      await dbHelper.insertInspection(data);
+      await dbHelper.insertInspection(data, userId: userId);
       print('Data berhasil disimpan ke backlog (database offline).');
     } catch (e) {
       print('Gagal menyimpan ke backlog: $e');
@@ -74,12 +87,19 @@ class InspectionService {
 
       for (var map in maps) {
         final localId = map['local_id'];
+        final userId = map['user_id'] as int?;
+        
+        if (userId == null) {
+          print('Skipping item $localId: userId tidak ditemukan');
+          continue;
+        }
+
         try {
           final model = InspectionModel.fromJson(map);
           final response = await client.post(
             Uri.parse(ApiConstants.cekpotUrl),
             headers: {'Content-Type': 'application/json; charset=UTF-8'},
-            body: jsonEncode(model.toJson()),
+            body: jsonEncode(model.toJson(userId: userId)),
           ).timeout(const Duration(seconds: 30));
 
           if (response.statusCode == 200 || response.statusCode == 201) {

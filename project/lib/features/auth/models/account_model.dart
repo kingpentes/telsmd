@@ -11,7 +11,6 @@ class AccountModel {
 
   // factory constructor, method fromJson
   factory AccountModel.fromJson(Map<String, dynamic> json) {
-    // Response format: { "success": true, "data": { "token": "...", "username": "...", ... } }
     if (json.containsKey('data') && json['data'] != null) {
       final data = json['data'] as Map<String, dynamic>;
       return AccountModel(
@@ -22,7 +21,6 @@ class AccountModel {
       );
     }
 
-    // Fallback: token di root level
     return AccountModel(
       id: json['id'],
       username: json['username']?.toString(),

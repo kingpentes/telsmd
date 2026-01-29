@@ -38,15 +38,16 @@ class InspectionModel {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({required int userId}) {
     return {
-      ...customer.toJson(),
+      ...customer.toJsonForCekpot(),
       ...kwhMeter.toJson(),
       ...standMeter.toJson(),
       ...ctInspection.toJson(),
       ...protection.toJson(),
       ...documentation.toJson(),
       ...result.toJson(),
+      'user_id': userId,
     };
   }
 }

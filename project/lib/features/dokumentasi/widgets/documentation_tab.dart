@@ -18,15 +18,11 @@ class _DocumentationTabState extends State<DocumentationTab> {
   @override
   void initState() {
     super.initState();
-    // No explicit initialization needed for images as we pull directly from provider in build or helper
-    // However, for local display consistency in _images map, we can sync.
-    // Actually, sticking to the _images pattern:
   }
 
   Future<void> _pickImage(String key, ImageSource source) async {
     final XFile? pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
-      // Update Provider
       final provider = Provider.of<InspectionProvider>(context, listen: false);
       final currentDoc = provider.documentation;
       
@@ -41,7 +37,7 @@ class _DocumentationTabState extends State<DocumentationTab> {
         beritaAcara: key == 'beritaAcara' ? path : currentDoc.beritaAcara,
       ));
       
-      setState(() {}); // Trigger rebuild to show new image
+      setState(() {});
     }
   }
 
@@ -57,7 +53,6 @@ class _DocumentationTabState extends State<DocumentationTab> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          // grid untuk foto kwh, foto relay, foto kubikel, foto hasil 1, foto hasil 2, berita acara
           GridView.count(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -80,7 +75,6 @@ class _DocumentationTabState extends State<DocumentationTab> {
   }
 
   Widget _buildImageInput(String label, String key) {
-    // Get image path from provider
     final provider = Provider.of<InspectionProvider>(context);
     final doc = provider.documentation;
     String? path;

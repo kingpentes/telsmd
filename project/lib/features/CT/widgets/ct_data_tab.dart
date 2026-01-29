@@ -141,13 +141,12 @@ class _CtDataTabState extends State<CtDataTab> {
     final s_s = parse(_ctsSekunderController.text);
     final s_t = parse(_cttSekunderController.text);
 
-    // 2. Calculate Ratio: Measured Primer / Measured Sekunder
+    // menghitung ratio
     if (s_r != 0) _ctrRatioController.text = format(p_r / s_r);
     if (s_s != 0) _ctsRatioController.text = format(p_s / s_s);
     if (s_t != 0) _cttRatioController.text = format(p_t / s_t);
 
-    // 3. Calculate Error
-    // Nameplate Ratio
+    // menghitung error
     final double? np_p = double.tryParse(npPrimer);
     final double? np_s = double.tryParse(npSekunder);
     

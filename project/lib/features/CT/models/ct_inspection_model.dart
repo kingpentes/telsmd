@@ -58,7 +58,7 @@ class CtInspectionModel {
       ctrTegangan: double.tryParse(json['vr']?.toString() ?? '') ?? 0.0,
       ctsTegangan: double.tryParse(json['vs']?.toString() ?? '') ?? 0.0,
       cttTegangan: double.tryParse(json['vt']?.toString() ?? '') ?? 0.0,
-      cosphi: double.tryParse(json['cosphi']?.toString() ?? '') ?? 0.0,
+      cosphi: double.tryParse(json['vn']?.toString() ?? json['cosphi']?.toString() ?? '') ?? 0.0,
     );
   }
 
@@ -72,16 +72,14 @@ class CtInspectionModel {
       'ctsr': ctrSekunder,
       'ctss': ctsSekunder,
       'ctst': cttSekunder,
-      'ctr_ratio': ctrRatio,
-      'cts_ratio': ctsRatio,
-      'ctt_ratio': cttRatio,
+      // ratio tidak dikirim ke backend (dihitung client-side)
       'ectr': ctrError,
       'ects': ctsError,
       'ectt': cttError,
       'vr': ctrTegangan,
       'vs': ctsTegangan,
       'vt': cttTegangan,
-      'cosphi': cosphi,
+      'vn': cosphi,  // cosphi dikirim sebagai 'vn'
     };
   }
 }

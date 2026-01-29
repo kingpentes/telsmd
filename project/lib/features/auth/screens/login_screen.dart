@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../inspection/screens/ct_inspection_screen.dart';
 import '../services/auth_Services.dart';
+import '../../users/screens/customer_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -27,16 +27,16 @@ class _LoginScreenState extends State<LoginScreen> {
           _usernameController.text,
           _passwordController.text,
         );
-        
+
         // Login success
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-             SnackBar(content: Text('Selamat datang, ${account.username}')),
+            SnackBar(content: Text('Selamat datang, ${account.username}')),
           );
-          
+
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const CtInspectionScreen()),
+            MaterialPageRoute(builder: (context) => const CustomerScreen()),
           );
         }
       } catch (e) {
@@ -113,8 +113,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
-                    child: _isLoading 
-                        ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                    child: _isLoading
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
                         : const Text('Login', style: TextStyle(fontSize: 16)),
                   ),
                 ],
