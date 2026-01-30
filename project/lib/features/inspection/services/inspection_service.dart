@@ -1,5 +1,5 @@
-/// Service untuk mengelola operasi pemeriksaan (cek potensial).
-/// Menangani pengiriman data ke server dan penyimpanan offline (backlog).
+// Service untuk mengelola operasi pemeriksaan (cek potensial).
+// Menangani pengiriman data ke server dan penyimpanan offline (backlog).
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -15,8 +15,7 @@ class InspectionService {
 
   InspectionService({http.Client? client}) : client = client ?? http.Client();
 
-  /// Mengirim data pemeriksaan ke server.
-  /// Jika gagal karena masalah jaringan atau server, data disimpan ke backlog lokal.
+  // Mengirim data pemeriksaan ke server.
   Future<bool> submitInspection(InspectionModel data) async {
     try {
       // Get userId from TokenStorage
@@ -26,20 +25,34 @@ class InspectionService {
         return false;
       }
 
-      final response = await client.post(
-        Uri.parse(ApiConstants.cekpotUrl),
-        headers: {'Content-Type': 'application/json; charset=UTF-8'},
-        body: jsonEncode(data.toJson(userId: userId)),
-      ).timeout(const Duration(seconds: 10));
+      final token = await TokenStorage.getToken();
+      if (token == null) {
+        print('Error: token not found - user may not be logged in');
+        return false;
+      }
+
+      final response = await client
+          .post(
+            Uri.parse(ApiConstants.cekpotUrl),
+            headers: {
+              'Content-Type': 'application/json; charset=UTF-8',
+              'Accept': 'application/json',
+              'Authorization': 'Bearer $token',
+            },
+            body: jsonEncode(data.toJson(userId: userId)),
+          )
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return true;
       } else {
-        print('Gagal mengirim pemeriksaan: ${response.statusCode} - ${response.body}');
-        // Jika error server (5xx), simpan ke backlog
+        print(
+          'Gagal mengirim pemeriksaan: ${response.statusCode} - ${response.body}',
+        );
+        // Jika error server, simpan ke backlog
         if (response.statusCode >= 500) {
-           await _saveToBacklog(data, userId);
-           return true; 
+          await _saveToBacklog(data, userId);
+          return true;
         }
         return false;
       }
@@ -64,7 +77,7 @@ class InspectionService {
     }
   }
 
-  /// Menyimpan data pemeriksaan ke database lokal (backlog) untuk dikirim nanti.
+  // Menyimpan data pemeriksaan ke database lokal (backlog) untuk dikirim nanti.
   Future<void> _saveToBacklog(InspectionModel data, int userId) async {
     try {
       await dbHelper.insertInspection(data, userId: userId);
@@ -74,7 +87,7 @@ class InspectionService {
     }
   }
 
-  /// Mengirim ulang semua data backlog yang belum tersinkronisasi ke server.
+  // Mengirim ulang semua data backlog yang belum tersinkronisasi ke server.
   Future<void> syncBacklog() async {
     try {
       final maps = await dbHelper.getUnsyncedInspectionsMaps();
@@ -83,12 +96,20 @@ class InspectionService {
         return;
       }
 
-      print('Ditemukan ${maps.length} item di backlog. Memulai sinkronisasi...');
+      print(
+        'Ditemukan ${maps.length} item di backlog. Memulai sinkronisasi...',
+      );
+
+      final token = await TokenStorage.getToken();
+      if (token == null) {
+        print('Tidak dapat sinkronisasi: token tidak ditemukan');
+        return;
+      }
 
       for (var map in maps) {
         final localId = map['local_id'];
         final userId = map['user_id'] as int?;
-        
+
         if (userId == null) {
           print('Skipping item $localId: userId tidak ditemukan');
           continue;
@@ -96,19 +117,25 @@ class InspectionService {
 
         try {
           final model = InspectionModel.fromJson(map);
-          final response = await client.post(
-            Uri.parse(ApiConstants.cekpotUrl),
-            headers: {'Content-Type': 'application/json; charset=UTF-8'},
-            body: jsonEncode(model.toJson(userId: userId)),
-          ).timeout(const Duration(seconds: 30));
+          final response = await client
+              .post(
+                Uri.parse(ApiConstants.cekpotUrl),
+                headers: {
+                  'Content-Type': 'application/json; charset=UTF-8',
+                  'Accept': 'application/json',
+                  'Authorization': 'Bearer $token',
+                },
+                body: jsonEncode(model.toJson(userId: userId)),
+              )
+              .timeout(const Duration(seconds: 30));
 
           if (response.statusCode == 200 || response.statusCode == 201) {
             print('Item dengan ID Lokal: $localId berhasil disinkronkan');
-            await dbHelper.deleteInspection(localId); 
+            await dbHelper.deleteInspection(localId);
           } else {
-             if (response.statusCode < 500) {
-               print('Gagal sinkronisasi item $localId: ${response.statusCode}');
-             }
+            if (response.statusCode < 500) {
+              print('Gagal sinkronisasi item $localId: ${response.statusCode}');
+            }
           }
         } catch (e) {
           print('Error saat sinkronisasi item $localId: $e');
@@ -119,12 +146,17 @@ class InspectionService {
     }
   }
 
-  /// Mengambil data pemeriksaan berdasarkan ID dari server.
+  // Mengambil data pemeriksaan berdasarkan ID dari server.
   Future<InspectionModel?> getInspection(String id) async {
     try {
+      final token = await TokenStorage.getToken();
       final response = await client.get(
         Uri.parse('${ApiConstants.cekpotUrl}/$id'),
-        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
       );
 
       if (response.statusCode == 200) {
@@ -140,12 +172,17 @@ class InspectionService {
     }
   }
 
-  /// Mengambil semua data pemeriksaan dari server.
+  // Mengambil semua data pemeriksaan dari server.
   Future<List<InspectionModel>> getAllInspections() async {
     try {
+      final token = await TokenStorage.getToken();
       final response = await client.get(
         Uri.parse(ApiConstants.cekpotUrl),
-        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
       );
 
       if (response.statusCode == 200) {
@@ -161,7 +198,7 @@ class InspectionService {
     }
   }
 
-  /// Mengambil informasi pelanggan berdasarkan ID Pelanggan.
+  // Mengambil informasi pelanggan berdasarkan ID Pelanggan.
   Future<CustomerModel?> getCustomerInfoById(String id) async {
     try {
       final token = await TokenStorage.getToken();
