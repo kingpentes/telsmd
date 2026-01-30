@@ -106,7 +106,7 @@ class DbHelper {
 
   Future<int> insertInspection(InspectionModel inspection, {required int userId}) async {
     final db = await database;
-    final data = inspection.toJson(userId: userId);    
+    final data = inspection.toJsonForDb(userId: userId);    
     data['is_synced'] = 0;
     return await db.insert('cek_potensials', data, conflictAlgorithm: ConflictAlgorithm.replace);
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../inspection/services/inspection_service.dart';
-import '../../inspection/models/inspection_model.dart';
 import '../../inspection/providers/inspection_provider.dart';
 import '../models/customer_model.dart';
 
@@ -26,22 +25,37 @@ class _CustomerDataTabState extends State<CustomerDataTab> {
 
   final _inspectionService = InspectionService();
   bool _isLoading = false;
+  
+  BigInt? _wilayahId;
+  BigInt? _uptigaId;
 
   @override
   void initState() {
     super.initState();
-    // Initialize controllers from provider
-    final customer = Provider.of<InspectionProvider>(context, listen: false).customer;
-    _idPelController.text = customer.idPel == BigInt.zero ? '' : customer.idPel.toString();
-    _unitUpController.text = customer.unitUp == BigInt.zero ? '' : customer.unitUp.toString();
+    final customer = Provider.of<InspectionProvider>(
+      context,
+      listen: false,
+    ).customer;
+    _wilayahId = customer.wilayahId;
+    _uptigaId = customer.uptigaId;
+    _idPelController.text = customer.idPel == BigInt.zero
+        ? ''
+        : customer.idPel.toString();
+    _unitUpController.text = customer.unitUp == BigInt.zero
+        ? ''
+        : customer.unitUp.toString();
     _namaController.text = customer.nama;
     _alamatController.text = customer.alamat;
     _tarifController.text = customer.tarif;
     _dayaController.text = customer.daya == 0 ? '' : customer.daya.toString();
     _merkMeterController.text = customer.merkMeter;
     _noMeterController.text = customer.noMeter;
-    _tahunMeterController.text = customer.tahunMeter == 0 ? '' : customer.tahunMeter.toString();
-    _faktorKaliMeterController.text = customer.faktorKaliMeter == 0 ? '' : customer.faktorKaliMeter.toString();
+    _tahunMeterController.text = customer.tahunMeter == 0
+        ? ''
+        : customer.tahunMeter.toString();
+    _faktorKaliMeterController.text = customer.faktorKaliMeter == 0
+        ? ''
+        : customer.faktorKaliMeter.toString();
 
     // Add listeners to update provider
     _idPelController.addListener(_updateProvider);
@@ -58,18 +72,23 @@ class _CustomerDataTabState extends State<CustomerDataTab> {
 
   void _updateProvider() {
     final provider = Provider.of<InspectionProvider>(context, listen: false);
-    provider.updateCustomer(CustomerModel(
-      idPel: BigInt.tryParse(_idPelController.text) ?? BigInt.zero,
-      unitUp: BigInt.tryParse(_unitUpController.text) ?? BigInt.zero,
-      nama: _namaController.text,
-      alamat: _alamatController.text,
-      tarif: _tarifController.text,
-      daya: double.tryParse(_dayaController.text) ?? 0.0,
-      merkMeter: _merkMeterController.text,
-      noMeter: _noMeterController.text,
-      tahunMeter: double.tryParse(_tahunMeterController.text) ?? 0.0,
-      faktorKaliMeter: double.tryParse(_faktorKaliMeterController.text) ?? 0.0,
-    ));
+    provider.updateCustomer(
+      CustomerModel(
+        idPel: BigInt.tryParse(_idPelController.text) ?? BigInt.zero,
+        unitUp: BigInt.tryParse(_unitUpController.text) ?? BigInt.zero,
+        wilayahId: _wilayahId,
+        uptigaId: _uptigaId,
+        nama: _namaController.text,
+        alamat: _alamatController.text,
+        tarif: _tarifController.text,
+        daya: double.tryParse(_dayaController.text) ?? 0.0,
+        merkMeter: _merkMeterController.text,
+        noMeter: _noMeterController.text,
+        tahunMeter: double.tryParse(_tahunMeterController.text) ?? 0.0,
+        faktorKaliMeter:
+            double.tryParse(_faktorKaliMeterController.text) ?? 0.0,
+      ),
+    );
   }
 
   @override
@@ -99,6 +118,10 @@ class _CustomerDataTabState extends State<CustomerDataTab> {
       final customer = await _inspectionService.getCustomerInfoById(id);
 
       if (customer != null && mounted) {
+        // Simpan wilayahId dan uptigaId dari hasil autofill
+        _wilayahId = customer.wilayahId;
+        _uptigaId = customer.uptigaId;
+        
         setState(() {
           _unitUpController.text = customer.unitUp.toString();
           _namaController.text = customer.nama;
@@ -110,8 +133,10 @@ class _CustomerDataTabState extends State<CustomerDataTab> {
           _tahunMeterController.text = customer.tahunMeter.toString();
           _faktorKaliMeterController.text = customer.faktorKaliMeter.toString();
         });
-        
+
         _updateProvider();
+        
+        print('Autofill - wilayah_id: $_wilayahId, uptiga_id: $_uptigaId');
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Data pelanggan ditemukan!')),

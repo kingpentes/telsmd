@@ -38,9 +38,36 @@ class InspectionModel {
     );
   }
 
+  /// toJson untuk mengirim ke API (format sesuai backend Laravel)
   Map<String, dynamic> toJson({required int userId}) {
     return {
       ...customer.toJsonForCekpot(),
+      ...kwhMeter.toJson(),
+      ...standMeter.toJson(),
+      ...ctInspection.toJson(),
+      ...protection.toJson(),
+      ...documentation.toJson(),
+      ...result.toJson(),
+      'user_id': userId,
+    };
+  }
+
+  /// toJsonForDb untuk menyimpan ke SQLite lokal (nama kolom sesuai db_helper.dart)
+  Map<String, dynamic> toJsonForDb({required int userId}) {
+    return {
+      'idpel_id': customer.idPel != null ? int.tryParse(customer.idPel.toString()) : null,
+      'unit_input_id': customer.unitUp != null ? int.tryParse(customer.unitUp.toString()) : null,
+      'wilayah_id': customer.wilayahId != null ? int.tryParse(customer.wilayahId.toString()) : null,
+      'uptiga_id': customer.uptigaId != null ? int.tryParse(customer.uptigaId.toString()) : null,
+      'nama': customer.nama,
+      'alamat': customer.alamat,
+      'tarif': customer.tarif,
+      'daya': customer.daya,
+      'merk_meter': customer.merkMeter,
+      'nomormeter': customer.noMeter,
+      'type_meter': customer.tahunMeter.toString(),
+      'fxm': customer.faktorKaliMeter,
+      'ct': customer.ct,
       ...kwhMeter.toJson(),
       ...standMeter.toJson(),
       ...ctInspection.toJson(),
