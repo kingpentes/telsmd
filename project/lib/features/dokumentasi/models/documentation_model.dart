@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 class DocumentationModel {
   final String fotoKwh;
   final String fotoRelay;
@@ -26,6 +29,21 @@ class DocumentationModel {
     );
   }
 
+  Future<String> _imageToBase64(String imagePath) async {
+    if (imagePath.isEmpty) return '';
+    try {
+      final file = File(imagePath);
+      if (await file.exists()) {
+        final bytes = await file.readAsBytes();
+        return base64Encode(bytes);
+      }
+    } catch (e) {
+      print('Error converting image to base64: $e');
+    }
+    return '';
+  }
+
+  /// toJson untuk penyimpanan lokal (menyimpan path file)
   Map<String, dynamic> toJson() {
     return {
       'doku1': fotoKwh,
@@ -34,6 +52,18 @@ class DocumentationModel {
       'doku4': fotoHasil1,
       'doku5': fotoHasil2,
       'dokumen': beritaAcara,
+    };
+  }
+
+  /// toJson untuk mengirim ke API
+  Future<Map<String, dynamic>> toJsonWithBase64() async {
+    return {
+      'doku1': await _imageToBase64(fotoKwh),
+      'doku2': await _imageToBase64(fotoRelay),
+      'doku3': await _imageToBase64(fotoKubikel),
+      'doku4': await _imageToBase64(fotoHasil1),
+      'doku5': await _imageToBase64(fotoHasil2),
+      'dokumen': await _imageToBase64(beritaAcara),
     };
   }
 }

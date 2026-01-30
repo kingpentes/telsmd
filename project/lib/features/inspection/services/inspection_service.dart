@@ -18,7 +18,7 @@ class InspectionService {
   // Mengirim data pemeriksaan ke server.
   Future<bool> submitInspection(InspectionModel data) async {
     try {
-      // Get userId from TokenStorage
+      // Get userId dari TokenStorage
       final userId = await TokenStorage.getUserId();
       if (userId == null) {
         print('Error: userId not found - user may not be logged in');
@@ -31,19 +31,36 @@ class InspectionService {
         return false;
       }
 
-      final response = await client
-          .post(
-            Uri.parse(ApiConstants.cekpotUrl),
-            headers: {
-              'Content-Type': 'application/json; charset=UTF-8',
-              'Accept': 'application/json',
-              'Authorization': 'Bearer $token',
-            },
-            body: jsonEncode(data.toJson(userId: userId)),
-          )
-          .timeout(const Duration(seconds: 10));
+      // Menggunakan MultipartRequest untuk mengirim file
+      var request = http.MultipartRequest('POST', Uri.parse(ApiConstants.cekpotUrl));
+      
+      // Header
+      request.headers['Accept'] = 'application/json';
+      request.headers['Authorization'] = 'Bearer $token';
+
+      // Data text fields
+      final jsonData = await data.toJsonForMultipart(userId: userId);
+      jsonData.forEach((key, value) {
+        if (value != null) {
+          request.fields[key] = value.toString();
+        }
+      });
+
+      // Tambahkan file gambar
+      final doc = data.documentation;
+      await _addFileToRequest(request, 'img_satu', doc.fotoKwh);
+      await _addFileToRequest(request, 'img_dua', doc.fotoRelay);
+      await _addFileToRequest(request, 'img_tiga', doc.fotoKubikel);
+      await _addFileToRequest(request, 'img_empat', doc.fotoHasil1);
+      await _addFileToRequest(request, 'img_lima', doc.fotoHasil2);
+      await _addFileToRequest(request, 'doc_ba', doc.beritaAcara);
+
+      // Kirim request
+      final streamedResponse = await request.send().timeout(const Duration(seconds: 60));
+      final response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        print('Data berhasil dikirim ke server');
         return true;
       } else {
         print(
@@ -74,6 +91,16 @@ class InspectionService {
         return true;
       }
       return false;
+    }
+  }
+
+  // Helper untuk menambahkan file ke MultipartRequest
+  Future<void> _addFileToRequest(http.MultipartRequest request, String fieldName, String filePath) async {
+    if (filePath.isNotEmpty) {
+      final file = File(filePath);
+      if (await file.exists()) {
+        request.files.add(await http.MultipartFile.fromPath(fieldName, filePath));
+      }
     }
   }
 
@@ -117,17 +144,29 @@ class InspectionService {
 
         try {
           final model = InspectionModel.fromJson(map);
-          final response = await client
-              .post(
-                Uri.parse(ApiConstants.cekpotUrl),
-                headers: {
-                  'Content-Type': 'application/json; charset=UTF-8',
-                  'Accept': 'application/json',
-                  'Authorization': 'Bearer $token',
-                },
-                body: jsonEncode(model.toJson(userId: userId)),
-              )
-              .timeout(const Duration(seconds: 30));
+          var request = http.MultipartRequest('POST', Uri.parse(ApiConstants.cekpotUrl));
+          request.headers['Accept'] = 'application/json';
+          request.headers['Authorization'] = 'Bearer $token';
+
+          // Data text fields
+          final jsonData = await model.toJsonForMultipart(userId: userId);
+          jsonData.forEach((key, value) {
+            if (value != null) {
+              request.fields[key] = value.toString();
+            }
+          });
+
+          // Coba tambahkan file gambar jika masih ada
+          final doc = model.documentation;
+          await _addFileToRequest(request, 'img_satu', doc.fotoKwh);
+          await _addFileToRequest(request, 'img_dua', doc.fotoRelay);
+          await _addFileToRequest(request, 'img_tiga', doc.fotoKubikel);
+          await _addFileToRequest(request, 'img_empat', doc.fotoHasil1);
+          await _addFileToRequest(request, 'img_lima', doc.fotoHasil2);
+          await _addFileToRequest(request, 'doc_ba', doc.beritaAcara);
+
+          final streamedResponse = await request.send().timeout(const Duration(seconds: 60));
+          final response = await http.Response.fromStream(streamedResponse);
 
           if (response.statusCode == 200 || response.statusCode == 201) {
             print('Item dengan ID Lokal: $localId berhasil disinkronkan');

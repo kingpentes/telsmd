@@ -102,8 +102,8 @@ class _KwhMeterDataTabState extends State<KwhMeterDataTab> {
           TextField(controller: _tahunMeterController, decoration: const InputDecoration(labelText: 'Tahun Meter', border: OutlineInputBorder())),
           const SizedBox(height: 16),
           TextField(controller: _classMeterController, decoration: const InputDecoration(labelText: 'Class Meter', border: OutlineInputBorder())),
-          // SizedBox(height: 16),
-          // TextField(decoration: InputDecoration(labelText: 'Kubikel / MCCB', border: OutlineInputBorder())), // Not in model yet
+          const SizedBox(height: 16),
+          TextField(controller: _kubikelController, decoration: const InputDecoration(labelText: 'Kubikel / MCCB (Pemb. Arus)', border: OutlineInputBorder())),
         ],
       ),
     );

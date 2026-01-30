@@ -38,21 +38,21 @@ class InspectionModel {
     );
   }
 
-  /// toJson untuk mengirim ke API (format sesuai backend Laravel)
-  Map<String, dynamic> toJson({required int userId}) {
+  /// toJson untuk mengirim ke API 
+  Future<Map<String, dynamic>> toJson({required int userId}) async {
     return {
       ...customer.toJsonForCekpot(),
       ...kwhMeter.toJson(),
       ...standMeter.toJson(),
       ...ctInspection.toJson(),
       ...protection.toJson(),
-      ...documentation.toJson(),
+      ...await documentation.toJsonWithBase64(),
       ...result.toJson(),
       'user_id': userId,
     };
   }
 
-  /// toJsonForDb untuk menyimpan ke SQLite lokal (nama kolom sesuai db_helper.dart)
+  /// toJsonForDb untuk menyimpan ke SQLite lokal 
   Map<String, dynamic> toJsonForDb({required int userId}) {
     return {
       'idpel_id': customer.idPel != null ? int.tryParse(customer.idPel.toString()) : null,
@@ -73,6 +73,19 @@ class InspectionModel {
       ...ctInspection.toJson(),
       ...protection.toJson(),
       ...documentation.toJson(),
+      ...result.toJson(),
+      'user_id': userId,
+    };
+  }
+
+  /// toJsonForMultipart untuk mengirim ke API
+  Future<Map<String, dynamic>> toJsonForMultipart({required int userId}) async {
+    return {
+      ...customer.toJsonForCekpot(),
+      ...kwhMeter.toJson(),
+      ...standMeter.toJson(),
+      ...ctInspection.toJson(),
+      ...protection.toJson(),
       ...result.toJson(),
       'user_id': userId,
     };
